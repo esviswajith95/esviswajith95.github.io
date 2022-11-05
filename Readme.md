@@ -1,4 +1,4 @@
-This repository hold the code for my [personal website](esviswajith95.github.io).
+This repository hold the code for my [personal website](https://esviswajith95.github.io/).
 
 All credits for the design to BootstrapMade.com.
 
