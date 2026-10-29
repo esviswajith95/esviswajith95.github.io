@@ -1,0 +1,87 @@
+---
+interface Props {
+  caption: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<figure>
+  <div class="frame">
+    <slot />
+  </div>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  figure {
+    margin: var(--space-6) 0;
+  }
+
+  .frame {
+    overflow-x: auto;
+    padding: var(--space-3) 0;
+    border-block: 1px solid var(--rule);
+  }
+
+  .frame :global(svg) {
+    display: block;
+    width: 100%;
+    min-width: 600px;
+    height: auto;
+  }
+
+  .frame :global(.d-box) {
+    fill: var(--paper);
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+
+  .frame :global(.d-accent) {
+    fill: var(--surface);
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+
+  .frame :global(.d-line) {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.25;
+  }
+
+  .frame :global(.d-dash) {
+    stroke-dasharray: 4 4;
+  }
+
+  .frame :global(.d-head) {
+    fill: var(--muted);
+  }
+
+  .frame :global(text) {
+    font-family: var(--sans);
+    fill: var(--ink);
+  }
+
+  .frame :global(.d-label) {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .frame :global(.d-sub),
+  .frame :global(.d-note) {
+    font-size: 12px;
+    fill: var(--muted);
+  }
+
+  .frame :global(.d-accent-text) {
+    fill: var(--accent);
+  }
+
+  figcaption {
+    margin-top: var(--space-2);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+</style>

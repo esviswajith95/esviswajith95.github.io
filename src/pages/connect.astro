@@ -1,0 +1,101 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+
+<Base
+  title="Connect"
+  description={`Download the résumé of ${SITE.name} or connect on LinkedIn.`}
+  og="home"
+  bare
+  noindex
+>
+  <section class="card">
+    <h1>{SITE.name}</h1>
+    <p class="subtitle">{SITE.jobTitle} at {SITE.employer}</p>
+
+    <ul class="links">
+      <li>
+        <a class="link primary" href={SITE.resumePdf} download>
+          <span>Download résumé</span>
+          <span class="hint">PDF</span>
+        </a>
+      </li>
+      <li>
+        <a class="link" href={SITE.links.linkedin} rel="me">
+          <span>Connect on LinkedIn</span>
+          <span class="hint" aria-hidden="true">↗</span>
+        </a>
+      </li>
+    </ul>
+
+    <a class="site" href="/">esviswajith95.github.io</a>
+  </section>
+</Base>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    max-width: 30rem;
+    margin-inline: auto;
+    padding: var(--space-6) var(--gutter);
+  }
+
+  h1 {
+    margin-bottom: var(--space-1);
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--muted);
+    margin-bottom: var(--space-5);
+  }
+
+  .links {
+    display: grid;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0 0 var(--space-5);
+    padding: 0;
+  }
+
+  .link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 64px;
+    padding: 0 var(--space-3);
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    color: var(--ink);
+    font-size: 1.125rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .link:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .hint {
+    font-size: 0.875rem;
+    opacity: 0.75;
+  }
+
+  .site {
+    align-self: center;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+</style>

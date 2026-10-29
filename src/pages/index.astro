@@ -1,0 +1,244 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CopyEmail from '../components/CopyEmail.astro';
+import { SITE } from '../config';
+import { formatDate } from '../lib/format';
+
+const cv = (await getEntry('resume', 'resume'))!.data;
+---
+
+<Base>
+  <script is:inline slot="head">
+    (() => {
+      const legacy = { '#resume': '/', '#portfolio': '/projects/' };
+      const target = legacy[location.hash];
+      if (target) location.replace(target);
+    })();
+  </script>
+
+  <header class="hero column">
+    <h1>{cv.name}</h1>
+    <p class="subtitle">{SITE.jobTitle} @ {SITE.employer}</p>
+    <p class="print-only contact">
+      {cv.email} · linkedin.com/in/esviswajith · esviswajith95.github.io
+    </p>
+
+    <div class="actions no-print">
+      <div class="btn-row">
+        <a class="btn btn-primary download" href={SITE.resumePdf} download>Download CV (PDF)</a>
+        <span class="updated">
+          Last updated <time datetime={cv.updated.toISOString().slice(0, 10)}>{formatDate(cv.updated)}</time>
+        </span>
+      </div>
+      <CopyEmail />
+      <div class="btn-row">
+        <a class="btn" href={SITE.links.linkedin} rel="me">LinkedIn</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="column cv">
+    <section class="cv-section" aria-labelledby="about-title">
+      <h2 id="about-title">What I do</h2>
+      <ul class="summary">
+        {cv.summary.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="cv-section" aria-labelledby="skills-title">
+      <h2 id="skills-title">Skills</h2>
+      <dl class="skills">
+        {
+          cv.skills.map((s) => (
+            <div>
+              <dt class="meta">{s.group}</dt>
+              <dd>
+                <ul class="tags">
+                  {s.items.map((item) => (
+                    <li class="chip">{item}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="cv-section" aria-labelledby="education-title">
+      <h2 id="education-title">Education</h2>
+      <ul class="roles">
+        {
+          cv.education.map((e) => (
+            <li>
+              <span>
+                {e.degree}, {e.institution} · {e.score}
+              </span>
+              <span class="period">{e.period}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="honours"><strong>Achievements:</strong> {cv.honours.join(' · ')}</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--section) var(--space-5);
+  }
+
+  h1 {
+    margin-bottom: var(--space-1);
+  }
+
+  .subtitle {
+    font-size: 1.375rem;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+
+  .actions {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .download {
+    font-size: 1.0625rem;
+    padding: 0.8em 1.5em;
+  }
+
+  .updated {
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+
+  .cv {
+    padding-bottom: var(--section);
+  }
+
+  .cv-section {
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  .cv-section h2 {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-3);
+  }
+
+  .cv-section p {
+    max-width: var(--measure);
+  }
+
+  .summary {
+    max-width: var(--measure);
+    margin: 0;
+    padding-left: 1.25em;
+  }
+
+  .summary li + li {
+    margin-top: var(--space-2);
+  }
+
+  .roles {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-3);
+  }
+
+  .roles li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-block: 0.2rem;
+  }
+
+  .period {
+    color: var(--muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .skills {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+  }
+
+  .skills dd {
+    margin: var(--space-1) 0 0;
+  }
+
+  .skills .chip {
+    white-space: normal;
+  }
+
+  .honours {
+    margin-top: var(--space-2);
+  }
+
+  strong {
+    font-weight: 500;
+  }
+
+  @media (max-width: 560px) {
+    .roles li {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  @media print {
+    .hero {
+      padding-block: 0 6pt;
+    }
+
+    .subtitle {
+      font-size: 11pt;
+      margin-bottom: 2pt;
+    }
+
+    .contact {
+      font-size: 9pt;
+      margin: 0;
+    }
+
+    .cv {
+      padding-bottom: 0;
+    }
+
+    .cv-section {
+      padding-block: 6pt;
+      border-top: 1px solid #bbb;
+    }
+
+    .cv-section h2 {
+      margin-bottom: 4pt;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: var(--sans);
+      font-size: 9.5pt;
+    }
+
+    .summary {
+      font-size: 10pt;
+      padding-left: 1.1em;
+    }
+
+    .summary li + li {
+      margin-top: 2pt;
+    }
+
+    .skills {
+      gap: 6pt;
+    }
+
+    .skills dd {
+      margin-top: 2pt;
+    }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostItem from '../components/PostItem.astro';
+import { SITE } from '../config';
+
+const posts = (await getCollection('writing')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Base
+  title="Writing"
+  description={`Essays on machine learning and credit risk from ${SITE.substack.name}, Viswajith E S's Substack.`}
+  og="writing"
+>
+  <header class="page-head column">
+    <span class="eyebrow">{SITE.substack.name}</span>
+    <h1>Writing</h1>
+    <p>
+      Notes on the ideas underneath production machine learning, published on Substack. Posts open there, where
+      comments and subscriptions live.
+    </p>
+    <a class="btn" href={SITE.substack.subscribe}>Subscribe to {SITE.substack.name}</a>
+  </header>
+
+  <section class="column list" aria-label="Posts">
+    {
+      posts.length > 0 ? (
+        posts.map((post) => <PostItem post={post} headingLevel="h2" />)
+      ) : (
+        <p>
+          New posts appear here automatically. Until then, read <a href={SITE.links.substack}>{SITE.substack.name}</a>{' '}
+          on Substack.
+        </p>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .list {
+    padding-bottom: var(--section);
+  }
+
+  .list > :global(*) {
+    border-top: 1px solid var(--rule);
+  }
+</style>

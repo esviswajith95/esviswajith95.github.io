@@ -1,0 +1,59 @@
+<svg viewBox="0 0 720 290" role="img" aria-labelledby="uw-title uw-desc">
+  <title id="uw-title">Underwriting model pipeline</title>
+  <desc id="uw-desc">
+    Five data sources (bureau, bank statements, SMS, application data, and GST and ITR returns) feed a shared
+    feature library with Sparse PCA feature selection. The features train a LightGBM or CatBoost model, which is
+    served by a scoring API that returns a score and SHAP reason codes. The scoring API feeds a monitoring layer
+    tracking PSI, CSI and performance drift, which loops back to the model for recalibration.
+  </desc>
+  <defs>
+    <marker id="uw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="d-head" d="M0 0 10 5 0 10z"></path>
+    </marker>
+  </defs>
+
+  <g>
+    <rect class="d-box" x="0.5" y="20" width="150" height="36" rx="2"></rect>
+    <text class="d-label" x="16" y="43">Bureau</text>
+    <rect class="d-box" x="0.5" y="68" width="150" height="36" rx="2"></rect>
+    <text class="d-label" x="16" y="91">Bank statements</text>
+    <rect class="d-box" x="0.5" y="116" width="150" height="36" rx="2"></rect>
+    <text class="d-label" x="16" y="139">SMS</text>
+    <rect class="d-box" x="0.5" y="164" width="150" height="36" rx="2"></rect>
+    <text class="d-label" x="16" y="187">Application</text>
+    <rect class="d-box" x="0.5" y="212" width="150" height="36" rx="2"></rect>
+    <text class="d-label" x="16" y="235">GST · ITR</text>
+  </g>
+
+  <g>
+    <path class="d-line" d="M151 38 C172 38 168 126 189 130" marker-end="url(#uw-arrow)"></path>
+    <path class="d-line" d="M151 86 C172 86 168 130 189 132" marker-end="url(#uw-arrow)"></path>
+    <path class="d-line" d="M151 134 H189" marker-end="url(#uw-arrow)"></path>
+    <path class="d-line" d="M151 182 C172 182 168 138 189 136" marker-end="url(#uw-arrow)"></path>
+    <path class="d-line" d="M151 230 C172 230 168 142 189 138" marker-end="url(#uw-arrow)"></path>
+  </g>
+
+  <rect class="d-box" x="190.5" y="106" width="140" height="56" rx="2"></rect>
+  <text class="d-label" x="260" y="130" text-anchor="middle">Feature library</text>
+  <text class="d-sub" x="260" y="149" text-anchor="middle">Sparse PCA selection</text>
+
+  <path class="d-line" d="M331 134 H364" marker-end="url(#uw-arrow)"></path>
+
+  <rect class="d-accent" x="365.5" y="106" width="135" height="56" rx="2"></rect>
+  <text class="d-label" x="433" y="130" text-anchor="middle">Model</text>
+  <text class="d-sub" x="433" y="149" text-anchor="middle">LightGBM · CatBoost</text>
+
+  <path class="d-line" d="M501 134 H529" marker-end="url(#uw-arrow)"></path>
+
+  <rect class="d-box" x="530.5" y="106" width="180" height="56" rx="2"></rect>
+  <text class="d-label" x="620" y="130" text-anchor="middle">Scoring API</text>
+  <text class="d-sub" x="620" y="149" text-anchor="middle">score + reason codes</text>
+
+  <path class="d-line" d="M620 162 V211" marker-end="url(#uw-arrow)"></path>
+  <path class="d-line d-dash" d="M433 212 V163" marker-end="url(#uw-arrow)"></path>
+  <text class="d-note" x="441" y="192">recalibrate</text>
+
+  <rect class="d-box" x="365.5" y="212" width="345" height="56" rx="2"></rect>
+  <text class="d-label" x="538" y="236" text-anchor="middle">Monitoring</text>
+  <text class="d-sub" x="538" y="255" text-anchor="middle">PSI · CSI · performance drift</text>
+</svg>

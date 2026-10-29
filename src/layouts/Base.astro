@@ -1,0 +1,107 @@
+---
+import '@fontsource/newsreader/latin-400.css';
+import '@fontsource/newsreader/latin-500.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/print.css';
+import newsreader500 from '@fontsource/newsreader/files/newsreader-latin-500-normal.woff2?url';
+import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  og?: string;
+  type?: 'website' | 'article' | 'profile';
+  bare?: boolean;
+  noindex?: boolean;
+}
+
+const { title, description = SITE.description, og = 'home', type = 'website', bare = false, noindex = false } = Astro.props;
+
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.jobTitle}, credit risk and GenAI`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(`/og/${og}.png`, Astro.site);
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.name,
+  jobTitle: SITE.jobTitle,
+  url: Astro.site?.toString(),
+  worksFor: { '@type': 'Organization', name: SITE.employer },
+  address: { '@type': 'PostalAddress', addressLocality: SITE.location, addressCountry: 'IN' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Indian Institute of Technology Madras' },
+    { '@type': 'CollegeOrUniversity', name: 'UM-DAE Centre for Excellence in Basic Sciences' },
+  ],
+  knowsAbout: ['Credit risk modelling', 'Underwriting', 'Fraud detection', 'Machine learning', 'Generative AI'],
+  sameAs: [SITE.links.linkedin, SITE.links.substack],
+};
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={SITE.name} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={newsreader500} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${title ?? SITE.name}: ${SITE.name}, ${SITE.jobTitle}`} />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(person)} />
+
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+
+    {
+      SITE.goatcounter && (
+        <script
+          is:inline
+          data-goatcounter={`https://${SITE.goatcounter}.goatcounter.com/count`}
+          async
+          src="//gc.zgo.at/count.js"
+        />
+      )
+    }
+    <slot name="head" />
+  </head>
+  <body>
+    {!bare && <a class="skip-link" href="#main">Skip to content</a>}
+    {!bare && <Header />}
+    <main id="main">
+      <slot />
+    </main>
+    {!bare && <Footer />}
+  </body>
+</html>

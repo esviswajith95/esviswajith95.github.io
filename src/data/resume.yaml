@@ -1,0 +1,99 @@
+# Single source for the home page résumé and the project bullets.
+# When the CV changes: replace public/Viswajith_ES_Resume.pdf, edit this file, bump `updated`.
+# Never add a phone number here; it stays inside the PDF only.
+
+name: Viswajith E S
+title: Senior Data Scientist
+location: Hyderabad, India
+email: esviswajith95@gmail.com
+updated: 2026-10-29
+
+# Shown under "What I do" on the home page.
+summary:
+  - Senior Data Scientist with 3.8 years of experience building and deploying production ML systems for credit risk, fraud, and cross-sell propensity for NBFCs and banks.
+  - Built extensive feature engineering pipelines for bureau, bank statement, SMS, GST and ITR data.
+  - Experienced in model validation, monitoring, and regulator-ready documentation
+  - Leads end-to-end enterprise software delivery with a team of 5 engineers.
+  - Building GenAI and agentic systems for collections and lending operations.
+
+experience:
+  - company: Monsoon CreditTech
+    context: End-to-end bespoke ML modelling for 4 NBFCs and 1 private bank
+    roles:
+      - title: Senior Data Scientist
+        period: Apr 2025 – Present
+      - title: Data Scientist
+        period: Feb 2023 – Mar 2025
+    highlights:
+      - Led a team of 5 engineers on a long-term retainer for a key enterprise client, owning
+        requirements gathering, model delivery, stakeholder management, and production support.
+    groups:
+      - name: Credit risk & underwriting
+        items:
+          - Developed and deployed underwriting models across 4 NBFCs using bureau, bank statement,
+            SMS, and application data, improving approval rates by ~10% at constant risk and reducing
+            delinquency by ~6% at constant approval rates. Models collectively score ~1.5 million
+            applications monthly in production.
+          - Built a multi-bureau underwriting model by unifying and normalising data from 3 credit
+            bureaus into a single credit report, gaining 4 AUC points (0.80 to 0.84) over a
+            single-bureau model on out-of-time validation.
+          - Designed GST- and ITR-based feature engineering libraries for MSME and business loan
+            underwriting.
+          - Built an MSME model suite leveraging bureau, banking, GST and ITR data for the MSME
+            portfolio.
+          - Set up post-deployment monitoring (PSI/CSI, performance drift) and SHAP-based reason
+            codes for declines; prepared model documentation supporting client validation and RBI
+            model-risk audits.
+          - Cut feature-selection time from ~2 hours to 10 seconds on large datasets by adding a
+            Sparse PCA–based feature selection method to the internal library, with minimal impact
+            on final model performance.
+      - name: Fraud & cross-sell
+        items:
+          - Built an LGBM-based insurance fraud model that captured 78.9% of fraud cases in the
+            riskiest 3 deciles.
+          - Built an SMS-based ML model to detect parallel-funding scams that don't show up in
+            bureau data, capturing 65.3% of fraud cases in the riskiest 3 deciles.
+          - Designed a personal loan propensity model for a leading private bank's savings account
+            base, capturing 84.4% of conversions in the top 30% of ranked customers for targeted
+            cross-sell.
+          - Built a customer segmentation pipeline combining clustering with decision-tree rule
+            extraction to produce interpretable cohorts for targeted marketing.
+      - name: GenAI & automation
+        items:
+          - Built an RBI-compliant agentic voice system for loan collections that assesses intent to
+            pay and negotiates promise-to-pay, part payment, or escalation to a human agent for
+            restructuring, using an STT–LLM–TTS pipeline with telephony integration.
+          - Built a modular RAG system over internal knowledge bases and RBI regulations, with
+            recall@k, LLM-as-judge, and gold-dataset evaluations to track every change.
+
+skills:
+  - group: Credit risk & BFSI
+    items:
+      - Application scorecards
+      - Propensity models
+      - Fraud detection models
+      - Feature engineering(Bureau, Bank statement, SMS, GST and ITR data
+      - Model validation and monitoring
+      - ECL modelling
+  - group: Languages & ML
+    items: [Python, SQL, scikit-learn, LightGBM, CatBoost, PyTorch, Keras, MLflow]
+  - group: GenAI
+    items: [RAG, LangGraph, LlamaIndex, CrewAI, Hugging Face Transformers]
+  - group: Platforms
+    items: [FastAPI, Flask, Django, Docker, Streamlit, AWS, GCP, Azure, PySpark, Airflow]
+
+education:
+  - degree: Diploma in Data Science
+    institution: IIT Madras
+    score: CGPA 9.5
+    period: Jan 2022 – Oct 2022
+  - degree: Integrated MSc in Physics
+    institution: UM-DAE CEBS, Mumbai
+    score: CGPA 8.07
+    period: 2013 – 2020
+
+honours:
+  - KVPY Fellow (2014–2018)
+  - INSPIRE Fellow
+  - IASc Summer Research Fellow
+  - 20-member Indian delegation, Asian Science Camp 2014

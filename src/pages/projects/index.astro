@@ -1,0 +1,176 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+// Temporarily hidden with the In depth section below.
+// import { getCollection } from 'astro:content';
+// const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const cv = (await getEntry('resume', 'resume'))!.data;
+const groups = cv.experience.flatMap((job) => job.groups);
+---
+
+<Base
+  title="Projects"
+  description="Projects in credit-risk underwriting, fraud, cross-sell and GenAI for lending, by Viswajith E S."
+  og="projects"
+>
+  <header class="page-head column">
+    <h1>Projects</h1>
+  </header>
+
+  {/*
+  <section class="band featured" aria-labelledby="featured-title">
+    <h2 id="featured-title" class="section-label meta">In depth</h2>
+    <ol>
+      {
+        projects.map((entry) => (
+          <li class="row">
+            <div class="main">
+              <h3>
+                <a href={`/projects/${entry.id}/`}>{entry.data.title}</a>
+              </h3>
+              <p class="problem">{entry.data.problem}</p>
+              <p class="meta">
+                {entry.data.sector} · {entry.data.year}
+              </p>
+            </div>
+            <p class="metric">
+              <span class="value">{entry.data.metric.value}</span>
+              <span class="label">{entry.data.metric.label}</span>
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+  */}
+
+  <section class="column all" aria-labelledby="all-title">
+    {
+      groups.map((group) => (
+        <div class="group">
+          <h3>{group.name}</h3>
+          <ul class="bullets">
+            {group.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </section>
+</Base>
+
+<style>
+  .section-label {
+    margin-bottom: var(--space-2);
+  }
+
+  .featured {
+    padding-bottom: var(--space-8);
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 16rem;
+    gap: var(--space-2) var(--space-5);
+    align-items: start;
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--rule);
+  }
+
+  .row h3 {
+    margin-bottom: var(--space-1);
+  }
+
+  .row h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .row h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .row:hover h3 a {
+    color: var(--accent);
+  }
+
+  .row:has(a:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .row h3 a:focus-visible {
+    outline: none;
+  }
+
+  .problem {
+    color: var(--muted);
+    max-width: var(--measure);
+    margin-bottom: var(--space-1);
+  }
+
+  .row .meta {
+    margin: 0;
+  }
+
+  .metric {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .value {
+    font-family: var(--serif);
+    font-size: 2.25rem;
+    line-height: 1;
+    font-variant-numeric: tabular-nums lining-nums;
+    white-space: nowrap;
+  }
+
+  .label {
+    font-size: 0.9375rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .all {
+    padding-bottom: var(--section);
+  }
+
+  .group {
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--rule);
+  }
+
+  .bullets {
+    padding-left: 1.25em;
+    margin: 0;
+  }
+
+  .bullets li {
+    margin-bottom: var(--space-1);
+  }
+
+  .bullets li::marker {
+    color: var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

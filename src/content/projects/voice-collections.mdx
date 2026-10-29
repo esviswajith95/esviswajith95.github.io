@@ -1,0 +1,64 @@
+---
+title: Agentic voice agent for loan collections
+order: 3
+description: An RBI-compliant voice agent that assesses intent to pay and negotiates promise-to-pay, part payment or escalation to a human for early-bucket collections.
+problem: Early-bucket collections calls are high-volume, repetitive and tightly regulated on conduct and timing.
+outcome: An RBI-compliant voice agent that assesses a borrower's intent to pay and negotiates one of three outcomes (promise to pay, part payment or escalation to a human agent for restructuring) over an STT–LLM–TTS pipeline with telephony integration.
+sector: Collections
+role: System design and build
+period: 2025 – present
+year: '2025–26'
+stack: [Python, LLM agents, STT, TTS, Telephony]
+tags: [GenAI, Agents, Voice]
+metric:
+  value: '3'
+  label: negotiated outcomes, each with a compliant hand-off
+---
+
+import Figure from '../../components/Figure.astro';
+import VoiceCollections from '../../components/diagrams/VoiceCollections.astro';
+
+## Context
+
+Early-bucket collections, borrowers a few days past due, is a volume problem. Most of these borrowers intend to pay; they forgot, were short this week, or need a few days. Reaching each of them quickly with a sensible conversation prevents a large share of accounts from rolling into later, costlier buckets.
+
+It is also one of the most regulated conversations a lender has. RBI's fair-practice expectations govern when borrowers can be called, how the agent identifies itself and the lender, and how the conversation is conducted. An automated caller that improvises is not acceptable. The task was to build an agent that can hold a real negotiation while staying predictably inside those rules.
+
+## Approach
+
+**A real-time voice pipeline.** The call runs through telephony into speech-to-text (STT), then to an LLM-based agent, and back to the borrower through text-to-speech (TTS). Latency matters because long pauses make a call feel robotic, so each stage was chosen and tuned with turn-taking in mind.
+
+**A state machine around the LLM, not the other way round.** The LLM handles language: understanding what the borrower said and phrasing a natural reply. The structure of the negotiation lives in an explicit state machine:
+
+1. Open the call with the required identification and disclosure.
+2. **Assess intent to pay:** willing and able, willing but short, or disputing the debt.
+3. Move toward one of three outcomes:
+   - **Promise to pay:** a specific date and amount, confirmed back to the borrower.
+   - **Part payment:** an agreed partial amount now, with the balance planned.
+   - **Escalation:** a hand-off to a human agent, for example to discuss restructuring, or whenever the borrower disputes the debt or asks for a person.
+
+Because the states and transitions are explicit, the agent can only reach outcomes the lender has approved, and every call can be audited against the path it took.
+
+**Guardrails on every turn.** Responses are constrained to the current state's allowed actions. Calling-hour and conduct rules are enforced outside the LLM, and anything the agent is not permitted to handle triggers a human hand-off rather than a guess.
+
+<Figure caption="The call flow. A real-time STT–LLM–TTS loop over telephony, with the agent's state machine moving from an intent check to one of three outcomes: promise to pay, part payment or escalation to a human.">
+  <VoiceCollections />
+</Figure>
+
+## Evaluation
+
+The agent was built with the same evaluation discipline as the RAG system I built over internal knowledge bases and RBI regulations. That system is tested with retrieval metrics (recall@k), LLM-as-judge scoring and gold datasets, so every change is measured before it ships.
+
+For the voice agent, that means:
+
+- **Gold conversations:** scripted borrower scenarios covering each intent and each outcome, including the awkward ones such as disputes, abuse and requests for a human.
+- **Rubric-based LLM-as-judge:** each transcript is scored on whether the agent reached the right outcome, followed the disclosure and conduct rules, and handed off when it should have.
+- **Regression on every change:** prompts, model versions and state-machine edits are all re-run against the same suite before release.
+
+## Impact
+
+The agent handles the intent check and negotiation end to end, within RBI fair-practice rules, and it escalates to a human for the cases that need judgement, such as restructuring. Human collectors spend their time on the conversations that need them.
+
+## What I'd do next
+
+The design choice I'd keep is putting the negotiation logic in an explicit state machine and using the LLM only for language. That makes compliance reviewable. Next, I would close the loop with outcome data: track which promises to pay are kept, feed that back into how the agent proposes dates and amounts, and use the collections history to decide which borrowers should get a human first.

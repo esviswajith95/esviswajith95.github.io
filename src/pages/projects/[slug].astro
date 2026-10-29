@@ -1,0 +1,25 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Project from '../../layouts/Project.astro';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+  return projects.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, prev: projects[i - 1], next: projects[i + 1] },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  prev?: CollectionEntry<'projects'>;
+  next?: CollectionEntry<'projects'>;
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Project entry={entry} prev={prev} next={next}>
+  <Content />
+</Project>

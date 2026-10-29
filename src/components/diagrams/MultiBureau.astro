@@ -1,0 +1,46 @@
+<svg viewBox="0 0 760 220" role="img" aria-labelledby="mb-title mb-desc">
+  <title id="mb-title">Multi-bureau data pipeline</title>
+  <desc id="mb-desc">
+    Reports from three credit bureaus flow into a normaliser that maps each format to one schema, de-duplicates
+    accounts reported by more than one bureau and reconciles conflicting fields. The output is a single unified
+    credit report of trade lines, enquiries and DPD history, from which features are built for the model, which
+    reached an out-of-time AUC of 0.84.
+  </desc>
+  <defs>
+    <marker id="mb-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="d-head" d="M0 0 10 5 0 10z"></path>
+    </marker>
+  </defs>
+
+  <rect class="d-box" x="0.5" y="20" width="120" height="36" rx="2"></rect>
+  <text class="d-label" x="60" y="43" text-anchor="middle">Bureau A</text>
+  <rect class="d-box" x="0.5" y="92" width="120" height="36" rx="2"></rect>
+  <text class="d-label" x="60" y="115" text-anchor="middle">Bureau B</text>
+  <rect class="d-box" x="0.5" y="164" width="120" height="36" rx="2"></rect>
+  <text class="d-label" x="60" y="187" text-anchor="middle">Bureau C</text>
+
+  <path class="d-line" d="M121 38 C144 38 142 104 164 106" marker-end="url(#mb-arrow)"></path>
+  <path class="d-line" d="M121 110 H164" marker-end="url(#mb-arrow)"></path>
+  <path class="d-line" d="M121 182 C144 182 142 116 164 114" marker-end="url(#mb-arrow)"></path>
+
+  <rect class="d-box" x="165.5" y="82" width="150" height="56" rx="2"></rect>
+  <text class="d-label" x="240" y="106" text-anchor="middle">Normaliser</text>
+  <text class="d-sub" x="240" y="125" text-anchor="middle">map · dedupe · reconcile</text>
+
+  <path class="d-line" d="M316 110 H344" marker-end="url(#mb-arrow)"></path>
+
+  <rect class="d-box" x="345.5" y="82" width="150" height="56" rx="2"></rect>
+  <text class="d-label" x="420" y="106" text-anchor="middle">Unified report</text>
+  <text class="d-sub" x="420" y="125" text-anchor="middle">trades · enquiries · DPD</text>
+
+  <path class="d-line" d="M496 110 H529" marker-end="url(#mb-arrow)"></path>
+
+  <rect class="d-box" x="530.5" y="82" width="90" height="56" rx="2"></rect>
+  <text class="d-label" x="575" y="115" text-anchor="middle">Features</text>
+
+  <path class="d-line" d="M621 110 H654" marker-end="url(#mb-arrow)"></path>
+
+  <rect class="d-accent" x="655.5" y="82" width="100" height="56" rx="2"></rect>
+  <text class="d-label" x="705" y="106" text-anchor="middle">Model</text>
+  <text class="d-sub d-accent-text" x="705" y="125" text-anchor="middle">AUC 0.84</text>
+</svg>

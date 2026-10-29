@@ -1,0 +1,77 @@
+---
+import { SITE } from '../config';
+---
+
+<div class="copy-email">
+  <a class="btn" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+  <button class="btn copy" type="button" data-email={SITE.email} aria-label="Copy email" title="Copy email" hidden>
+    <svg class="icon-copy" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <rect x="8.5" y="8.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"></rect>
+      <path d="M15.5 8.5V5a1.5 1.5 0 0 0-1.5-1.5H5A1.5 1.5 0 0 0 3.5 5v9A1.5 1.5 0 0 0 5 15.5h3.5" fill="none" stroke="currentColor" stroke-width="1.6"></path>
+    </svg>
+    <svg class="icon-check" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+  <span class="status" role="status" aria-live="polite"></span>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('.copy-email').forEach((root) => {
+    const button = root.querySelector('.copy');
+    const status = root.querySelector('.status');
+    if (!button || !navigator.clipboard) return;
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.email);
+        button.dataset.copied = '';
+        status.textContent = 'Copied';
+      } catch {
+        status.textContent = 'Copy failed. Select the address instead.';
+      }
+      setTimeout(() => {
+        delete button.dataset.copied;
+        status.textContent = '';
+      }, 2500);
+    });
+  });
+</script>
+
+<style>
+  .copy-email {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1) var(--space-2);
+  }
+
+  .copy {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .copy[hidden] {
+    display: none;
+  }
+
+  .icon-check,
+  .copy[data-copied] .icon-copy {
+    display: none;
+  }
+
+  .copy[data-copied] .icon-check {
+    display: block;
+    color: var(--accent);
+  }
+
+  .copy[data-copied]:hover .icon-check {
+    color: inherit;
+  }
+
+  .status {
+    font-size: 0.9375rem;
+    color: var(--accent);
+  }
+</style>

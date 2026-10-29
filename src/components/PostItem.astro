@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../lib/format';
+
+interface Props {
+  post: CollectionEntry<'writing'>;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, headingLevel: Heading = 'h3' } = Astro.props;
+const { title, subtitle, url, date, readingMinutes } = post.data;
+---
+
+<article class="post">
+  <p class="meta">
+    <time datetime={date.toISOString()}>{formatDate(date)}</time>
+    <span aria-hidden="true"> · </span>{readingMinutes} min read
+  </p>
+  <Heading class="title">
+    <a href={url}>{title}<span class="visually-hidden"> (opens on Substack)</span></a>
+  </Heading>
+  {subtitle && <p class="subtitle">{subtitle}</p>}
+</article>
+
+<style>
+  .post {
+    padding-block: var(--space-3);
+  }
+
+  .meta {
+    margin-bottom: var(--space-1);
+  }
+
+  .title {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-1);
+  }
+
+  .title a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .title a:hover {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .title a::after {
+    content: ' ↗';
+    font-family: var(--sans);
+    font-size: 0.7em;
+    color: var(--muted);
+  }
+
+  .subtitle {
+    color: var(--muted);
+    margin: 0;
+    max-width: var(--measure);
+  }
+</style>

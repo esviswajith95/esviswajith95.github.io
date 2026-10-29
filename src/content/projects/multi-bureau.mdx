@@ -1,0 +1,59 @@
+---
+title: Multi-bureau underwriting model
+order: 2
+description: Unifying three credit bureaus into one credit report lifted out-of-time AUC from 0.80 to 0.84 over a single-bureau model.
+problem: Lenders pull reports from several bureaus, but their models usually read only one.
+outcome: Unifying three bureau formats into a single credit report raised out-of-time AUC from 0.80 to 0.84, a 4-point gain over the single-bureau model.
+sector: Lending
+role: Data pipeline and model build
+period: '2024'
+year: '2024'
+stack: [Python, SQL]
+tags: [Bureau data, Data engineering, Credit risk]
+metric:
+  value: '0.80 → 0.84'
+  label: AUC on out-of-time validation
+---
+
+import Figure from '../../components/Figure.astro';
+import MultiBureau from '../../components/diagrams/MultiBureau.astro';
+
+## Context
+
+In India, a lender often pulls a borrower's report from more than one credit bureau. Coverage differs: a loan may be reported to one bureau and not another, and a thin file at one bureau can be a fuller file at the next. Yet underwriting models are usually built on a single bureau's report, because each bureau has its own format and joining them is real work.
+
+The question was simple. If we let the model see everything the lender has already paid for, does it rank risk better? The way to answer it was to build that combined view properly, rather than concatenating three sets of features.
+
+## Data
+
+The input was the full bureau response from three credit bureaus for each applicant. Each bureau describes the same things (accounts, enquiries, repayment history) but with different field names, codes, date conventions and levels of detail.
+
+The output needed to look like one credit report, so that every feature downstream could be written once against a single schema:
+
+- **Trade lines:** one row per real-world account, with lender type, product, sanctioned amount, balance, dates and status.
+- **Enquiries:** one record per credit enquiry, with duplicates across bureaus collapsed.
+- **DPD history:** one month-by-month repayment string per account.
+
+<Figure caption="The multi-bureau pipeline. Three bureau feeds are normalised into one schema, accounts are de-duplicated and conflicts reconciled, and features are built once on the unified report.">
+  <MultiBureau />
+</Figure>
+
+## Approach
+
+**Normalise first.** Each bureau's response is mapped to the common schema: product and ownership codes to one vocabulary, amounts and dates to one convention, and account status to one set of states. Doing this as a separate layer meant the feature code never needed to know which bureau a field came from.
+
+**De-duplicate accounts.** The same loan commonly appears in two or three reports. Counting it once per bureau would inflate exposure and the number of active trades, which would teach the model the wrong thing. Accounts are matched across bureaus on stable attributes (lender, product type, opening date and sanctioned amount, with tolerances) and merged into a single trade line.
+
+**Reconcile conflicts.** Merged accounts do not always agree. One bureau may have a more recent reporting date, another a different balance or a missing month of history. In general terms, the reconciliation favours the most recently reported values for current state and combines repayment histories month by month, so that a missed payment reported by any bureau is not lost. Each rule is deterministic and documented, so a credit analyst can trace any merged field back to its sources.
+
+**Features on the merged view.** With a clean unified report, the existing bureau feature library applies unchanged: utilisation, vintage, enquiry velocity, delinquency recency and severity, and product mix. The resulting model was benchmarked against a single-bureau model on the same out-of-time validation.
+
+## Impact
+
+On **out-of-time validation**, AUC rose from **0.80** for the single-bureau model to **0.84** for the multi-bureau model, a gain of 4 AUC points from letting the model see the full picture the lender already pays for.
+
+For a lender, better rank-ordering at the top and bottom of the score distribution is what turns into higher approvals at the same risk, or lower losses at the same approvals.
+
+## What I'd do next
+
+The normaliser was the real asset. The same unified report could serve monitoring, policy rules and collections, not only one model. Next, I would publish it as a shared data product with its own tests and data contracts, and measure how often bureaus disagree as a data-quality signal in its own right.

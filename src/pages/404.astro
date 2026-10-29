@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found" description="This page doesn't exist." og="home">
+  <section class="page-head column">
+    <span class="eyebrow">404</span>
+    <h1>This page doesn't exist.</h1>
+    <p>It may have moved when the site was rebuilt. Try one of these instead:</p>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="/">Home and résumé</a>
+      <a class="btn btn-text" href="/projects/">Projects</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  section {
+    min-height: 50vh;
+  }
+</style>

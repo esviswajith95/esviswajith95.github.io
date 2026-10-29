@@ -1,0 +1,74 @@
+---
+title: Bespoke underwriting models for 4 NBFCs
+order: 1
+description: Underwriting models for four NBFCs that score ~1.5M applications a month, lifting approvals by ~10% at constant risk and cutting delinquency by ~6% at constant approvals.
+problem: Bureau-only scorecards were turning away creditworthy thin-file and new-to-credit borrowers.
+outcome: Across four NBFCs, the models lifted approval rates by ~10% at constant risk and cut delinquency by ~6% at constant approval rates. Together they score ~1.5 million applications a month in production.
+sector: NBFC lending
+role: Model build; led a team of 5 engineers
+period: 2023 – present
+year: '2023–26'
+stack: [Python, SQL, LightGBM, CatBoost, SHAP]
+tags: [Credit risk, LightGBM, SHAP]
+metric:
+  value: '+10%'
+  label: approvals at constant risk
+---
+
+import Figure from '../../components/Figure.astro';
+import Underwriting from '../../components/diagrams/Underwriting.astro';
+
+## Context
+
+The NBFCs we work with lend to people a bank scorecard struggles to see: salaried and self-employed borrowers with short or no credit histories, and small businesses whose real cash flow sits in bank statements and tax filings rather than in a bureau report. A bureau-only scorecard treats a thin file as a risky file. That means a lender either declines good customers or loosens its cut-offs and takes on losses it did not price for.
+
+Each lender came to us with a version of the same question. Can we approve more of the people we are currently rejecting without moving the default rate? Or, holding approvals where they are, can we lose less? These are two sides of the same trade-off, and a better rank-ordering model improves both.
+
+## Data
+
+Every engagement started from four families of data, with the mix depending on the lender's product and its sourcing:
+
+- **Bureau reports:** trade lines, enquiries, repayment history and DPD (days past due) strings.
+- **Bank statements:** inflows, outflows, balances and the regularity of salary or business credits.
+- **SMS data:** transactional messages, shared with consent, which capture credit behaviour that never reaches a bureau.
+- **Application data:** what the borrower declared at onboarding.
+
+For the MSME and business-loan suite I added two more: GST returns and ITR filings. These give an independent view of turnover and its seasonality.
+
+No raw data, schemas or client-specific variables are shown here. The diagram below describes the shape of the pipeline, not its contents.
+
+<Figure caption="The shared underwriting pipeline. Five data sources feed one feature library; a gradient-boosted model is served through a scoring API that returns a score with reason codes; monitoring feeds back into recalibration.">
+  <Underwriting />
+</Figure>
+
+## Approach
+
+**Feature libraries, not one-off notebooks.** Each lender's model is bespoke, but its features are not reinvented each time. We maintain feature-engineering libraries for bureau, bank statement and SMS data, and I designed the GST and ITR libraries used for MSME and business-loan underwriting. A new client starts from thousands of tested candidate features rather than a blank page.
+
+**Feature selection that scales.** Large candidate sets made selection the slowest step in the loop: about two hours per run on big datasets. I added a Sparse PCA–based selection method to our internal library, which brought this down to about 10 seconds with minimal impact on final model performance. That turned selection from an overnight job into something we could iterate on during a working session.
+
+**Models.** The production models are gradient-boosted trees, LightGBM or CatBoost depending on the data. These handle the missing values and non-linear interactions that thin-file data is full of, and they stay explainable at the level a credit policy team needs.
+
+**Validation the way a risk team will judge it.** Every model is validated out of time, on a later period than it was trained on. The aim is to approximate how it will behave on next quarter's applicants, not on a random holdout of the same months. Results are reported as trade-offs a lender can act on: the approval rate it can reach at its current risk appetite, and the delinquency rate at its current approval rate.
+
+## Production
+
+A model only matters once it is making decisions, so each one ships with the things a lender's risk and compliance teams need:
+
+- **Monitoring:** population and characteristic stability (PSI and CSI) and performance drift, so we see when the applicant mix or model performance starts to move.
+- **Reason codes:** SHAP-based reason codes for every decline, which give credit officers and borrowers an explanation that is grounded in the model.
+- **Documentation:** model documentation written for the client's own validation team and for RBI model-risk audits.
+
+On the largest of these engagements, a long-term retainer for a key enterprise client, I led a team of five engineers. I owned requirements gathering, model delivery, stakeholder management and production support.
+
+## Impact
+
+Measured against each lender's existing approach:
+
+- **Approval rate up ~10%** at the same level of risk.
+- **Delinquency down ~6%** at the same approval rate.
+- **~1.5 million applications a month** scored in production across the deployed models.
+
+## What I'd do next
+
+The biggest lesson is that model quality is rarely the bottleneck. The gains came from data breadth (bank statements, SMS and GST give thin-file borrowers a voice) and from making the loop fast enough to try more ideas. Next, I would push monitoring from alerting toward action. When a characteristic drifts, the system should suggest whether to recalibrate, retrain or adjust a policy cut-off, instead of only flagging the change.

@@ -1,0 +1,64 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm 16mm;
+  }
+
+  :root,
+  :root[data-theme='dark'] {
+    --paper: #fff;
+    --ink: #000;
+    --muted: #444;
+    --rule: #bbb;
+    --accent: #000;
+    --accent-ink: #fff;
+    --fs-body: 10pt;
+    --fs-display: 20pt;
+    --fs-h2: 12pt;
+    --fs-h3: 10.5pt;
+    --fs-meta: 8pt;
+    --section: 10pt;
+    --gutter: 0;
+  }
+
+  body {
+    line-height: 1.4;
+    background: #fff;
+    color: #000;
+  }
+
+  .site-header,
+  .site-footer,
+  .skip-link,
+  .no-print {
+    display: none !important;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .section {
+    border-top: 0;
+    padding-block: 6pt;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  li,
+  .cv-entry {
+    break-inside: avoid;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+}
+
+.print-only {
+  display: none;
+}

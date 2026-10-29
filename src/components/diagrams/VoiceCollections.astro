@@ -1,0 +1,64 @@
+<svg viewBox="0 0 740 340" role="img" aria-labelledby="vc-title vc-desc">
+  <title id="vc-title">Voice collections agent call flow</title>
+  <desc id="vc-desc">
+    The borrower's call passes through telephony to speech-to-text, then to an LLM agent driven by a negotiation
+    state machine with guardrails, and back to the borrower through text-to-speech. The agent first checks intent
+    to pay. Each call ends in one of three outcomes: a promise to pay with a date and amount, an agreed part
+    payment, or escalation to a human agent for restructuring. RBI fair-practice rules on timing, disclosure and
+    conduct are enforced at every turn.
+  </desc>
+  <defs>
+    <marker id="vc-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="d-head" d="M0 0 10 5 0 10z"></path>
+    </marker>
+  </defs>
+
+  <path class="d-line d-dash" d="M580 52 V24 H50 V51" marker-end="url(#vc-arrow)"></path>
+  <text class="d-note" x="315" y="16" text-anchor="middle">agent speech back to the borrower</text>
+
+  <rect class="d-box" x="0.5" y="52" width="100" height="44" rx="2"></rect>
+  <text class="d-label" x="50" y="79" text-anchor="middle">Borrower</text>
+  <path class="d-line" d="M101 74 H124" marker-end="url(#vc-arrow)"></path>
+
+  <rect class="d-box" x="125.5" y="52" width="100" height="44" rx="2"></rect>
+  <text class="d-label" x="175" y="79" text-anchor="middle">Telephony</text>
+  <path class="d-line" d="M226 74 H249" marker-end="url(#vc-arrow)"></path>
+
+  <rect class="d-box" x="250.5" y="52" width="60" height="44" rx="2"></rect>
+  <text class="d-label" x="280" y="79" text-anchor="middle">STT</text>
+  <path class="d-line" d="M311 74 H334" marker-end="url(#vc-arrow)"></path>
+
+  <rect class="d-accent" x="335.5" y="52" width="190" height="44" rx="2"></rect>
+  <text class="d-label" x="430" y="71" text-anchor="middle">LLM agent</text>
+  <text class="d-sub" x="430" y="88" text-anchor="middle">state machine + guardrails</text>
+  <path class="d-line" d="M526 74 H549" marker-end="url(#vc-arrow)"></path>
+
+  <rect class="d-box" x="550.5" y="52" width="60" height="44" rx="2"></rect>
+  <text class="d-label" x="580" y="79" text-anchor="middle">TTS</text>
+
+  <path class="d-line" d="M430 96 V129" marker-end="url(#vc-arrow)"></path>
+
+  <rect class="d-box" x="330.5" y="130" width="200" height="50" rx="2"></rect>
+  <text class="d-label" x="430" y="151" text-anchor="middle">Intent check</text>
+  <text class="d-sub" x="430" y="169" text-anchor="middle">willing · able · disputing</text>
+
+  <path class="d-line" d="M400 181 C400 210 150 210 150 239" marker-end="url(#vc-arrow)"></path>
+  <path class="d-line" d="M430 181 V239" marker-end="url(#vc-arrow)"></path>
+  <path class="d-line" d="M460 181 C460 210 650 210 650 239" marker-end="url(#vc-arrow)"></path>
+
+  <rect class="d-box" x="70.5" y="240" width="160" height="50" rx="2"></rect>
+  <text class="d-label" x="150" y="261" text-anchor="middle">Promise to pay</text>
+  <text class="d-sub" x="150" y="279" text-anchor="middle">date + amount</text>
+
+  <rect class="d-box" x="350.5" y="240" width="160" height="50" rx="2"></rect>
+  <text class="d-label" x="430" y="261" text-anchor="middle">Part payment</text>
+  <text class="d-sub" x="430" y="279" text-anchor="middle">partial amount agreed</text>
+
+  <rect class="d-box" x="570.5" y="240" width="160" height="50" rx="2"></rect>
+  <text class="d-label" x="650" y="261" text-anchor="middle">Escalate</text>
+  <text class="d-sub" x="650" y="279" text-anchor="middle">human: restructuring</text>
+
+  <text class="d-note" x="370" y="325" text-anchor="middle">
+    Guardrails on every turn: RBI fair-practice rules on calling hours, disclosure and conduct
+  </text>
+</svg>
